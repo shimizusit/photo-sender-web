@@ -1,0 +1,30 @@
+{
+  "recommendations": [
+    // TypeScript/JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // React/Preact
+    "dsznajder.es7-react-js-snippets",
+    "formulahendry.auto-rename-tag",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss",
+
+    // Git
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // その他の便利な拡張機能
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+    "naumovs.color-highlight",
+    "aaron-bond.better-comments",
+    "wayou.vscode-todo-highlight",
+    "gruntfuggly.todo-tree",
+    "yzhang.markdown-all-in-one",
+    "shardulm94.trailing-spaces",
+    "vscode-icons-team.vscode-icons"
+  ]
+}
