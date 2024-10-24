@@ -26,6 +26,10 @@ insert_final_newline = true
 indent_size = 2
 insert_final_newline = true
 
+[*.ts]
+indent_size = 2
+insert_final_newline = true
+
 [*.tsx]
 indent_size = 2
 insert_final_newline = true
