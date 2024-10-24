@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
-import { signal } from '@preact/signals';
-import ky from 'ky';
-import classNames from 'classnames';
+import { signal } from "@preact/signals";
+import classNames from "classnames";
+import ky from "ky";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 // 状態管理
 const isConnected = signal(false);
@@ -19,21 +19,21 @@ export function App() {
 
   // WebSocket接続の管理
   const connectWebSocket = () => {
-    ws = new WebSocket('ws://localhost:8000/ws');
-    
+    ws = new WebSocket("ws://localhost:8000/ws");
+
     ws.onopen = () => {
       isConnected.value = true;
       setError(null);
     };
-    
+
     ws.onclose = () => {
       isConnected.value = false;
       // 再接続を試みる
       setTimeout(connectWebSocket, 3000);
     };
-    
+
     ws.onerror = () => {
-      setError('WebSocket接続エラー');
+      setError("WebSocket接続エラー");
     };
   };
 
@@ -43,8 +43,8 @@ export function App() {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
+          height: { ideal: 720 },
+        },
       });
       setStream(mediaStream);
       if (videoRef.current) {
@@ -52,7 +52,7 @@ export function App() {
       }
       setError(null);
     } catch (err) {
-      setError('カメラの初期化に失敗しました');
+      setError("カメラの初期化に失敗しました");
       console.error(err);
     }
   };
@@ -65,26 +65,36 @@ export function App() {
     uploadProgress.value = 0;
 
     try {
-      const context = canvasRef.current.getContext('2d');
-      if (!context) throw new Error('Canvas context is null');
+      const context = canvasRef.current.getContext("2d");
+      if (!context) throw new Error("Canvas context is null");
 
       // 現在のビデオフレームをキャプチャ
-      context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-      
+      context.drawImage(
+        videoRef.current,
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
+
       // Canvas画像をBlobに変換
       const blob = await new Promise<Blob>((resolve) => {
-        canvasRef.current?.toBlob(blob => {
-          if (blob) resolve(blob);
-        }, 'image/jpeg', 0.9);
+        canvasRef.current?.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+          },
+          "image/jpeg",
+          0.9
+        );
       });
 
       // FormDataの作成
       const formData = new FormData();
-      formData.append('image', blob, 'capture.jpg');
-      formData.append('description', 'Live camera capture');
+      formData.append("image", blob, "capture.jpg");
+      formData.append("description", "Live camera capture");
 
       // 画像のアップロード
-      await ky.post('http://localhost:8000/upload/', {
+      await ky.post("http://localhost:8000/upload/", {
         body: formData,
         onUploadProgress: (progress) => {
           uploadProgress.value = progress.percent;
@@ -93,7 +103,7 @@ export function App() {
 
       setError(null);
     } catch (err) {
-      setError('画像の送信に失敗しました');
+      setError("画像の送信に失敗しました");
       console.error(err);
     } finally {
       isCapturing.value = false;
@@ -109,7 +119,7 @@ export function App() {
     // クリーンアップ
     return () => {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       }
       if (ws) {
         ws.close();
@@ -123,10 +133,11 @@ export function App() {
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Photo Sender</h1>
           <p className="mt-2 text-gray-600">
-            {isConnected.value ? 
-              <span className="text-green-600">接続済み</span> : 
+            {isConnected.value ? (
+              <span className="text-green-600">接続済み</span>
+            ) : (
               <span className="text-red-600">未接続</span>
-            }
+            )}
           </p>
         </header>
 
@@ -157,15 +168,16 @@ export function App() {
               onClick={captureAndSend}
               disabled={!isConnected.value || isCapturing.value}
               className={classNames(
-                'w-full py-3 px-4 rounded-lg font-semibold text-white transition',
+                "w-full py-3 px-4 rounded-lg font-semibold text-white transition",
                 {
-                  'bg-primary-600 hover:bg-primary-700': isConnected.value && !isCapturing.value,
-                  'bg-gray-400': !isConnected.value,
-                  'bg-primary-400 animate-pulse-slow': isCapturing.value
+                  "bg-primary-600 hover:bg-primary-700":
+                    isConnected.value && !isCapturing.value,
+                  "bg-gray-400": !isConnected.value,
+                  "bg-primary-400 animate-pulse-slow": isCapturing.value,
                 }
               )}
             >
-              {isCapturing.value ? '送信中...' : '写真を撮影・送信'}
+              {isCapturing.value ? "送信中..." : "写真を撮影・送信"}
             </button>
 
             {isCapturing.value && uploadProgress.value > 0 && (
