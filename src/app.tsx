@@ -96,7 +96,7 @@ export function App() {
       // 画像のアップロード
       await ky.post("http://localhost:8000/upload/", {
         body: formData,
-        onUploadProgress: (progress) => {
+        onDownloadProgress: (progress) => {
           uploadProgress.value = progress.percent;
         },
       });
